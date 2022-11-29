@@ -1,7 +1,7 @@
 CREATE DATABASE sepotipayi_soap;
 
 CREATE TABLE logging (
-  id int NOT NULL,
+  id int NOT NULL AUTO_INCREMENT,
   description char(255) NOT NULL,
   ip char(16) NOT NULL,
   endpoint char(255) NOT NULL,
