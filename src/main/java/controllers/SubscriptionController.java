@@ -25,6 +25,7 @@ import models.Subscription;
 import models.SubscriptionData;
 import models.Logging;
 import models.LoggingData;
+import middleware.ValidateAPIKey;
 
 @WebService(endpointInterface = "controllers.SubscriptionInterface")
 public class SubscriptionController implements SubscriptionInterface {
@@ -76,14 +77,23 @@ public class SubscriptionController implements SubscriptionInterface {
 
     @WebMethod
     public void addSubscription(SubscriptionData sData) {
+        MessageContext mc = webService.getMessageContext();
+
+        // check api key
+        ValidateAPIKey validateApiKey = new ValidateAPIKey();
+        String apikey = validateApiKey.validateApiKey(mc);
+        if (apikey.equals("INVALID")) {
+            System.out.println("Invalid API key");
+            return;
+        }
+        
         // add subscription
         subscription.addSubscription(sData);
         
         // request logging
         LoggingData lData = new LoggingData();
-        MessageContext mc = webService.getMessageContext();
         HttpExchange req = (HttpExchange) mc.get(JAXWSProperties.HTTP_EXCHANGE);
-        lData.setDescription("Subscription with creatorId " + sData.getCreatorId() + " and subscriberId " + sData.getSubscriberId() + " added");
+        lData.setDescription("Subscription request from " + apikey + " with creatorId " + sData.getCreatorId() + " and subscriberId " + sData.getSubscriberId() + " added");
         lData.setIp((req.getRemoteAddress()).toString());
         lData.setEndpoint("/subscription");
         lData.setRequestedAt(new Timestamp(System.currentTimeMillis()));
@@ -111,6 +121,16 @@ public class SubscriptionController implements SubscriptionInterface {
     
     @WebMethod
     public void updateStatus(Integer creatorId, Integer subscriberId, String status) {
+        MessageContext mc = webService.getMessageContext();
+
+        // check api key
+        ValidateAPIKey validateApiKey = new ValidateAPIKey();
+        String apikey = validateApiKey.validateApiKey(mc);
+        if (apikey.equals("INVALID")) {
+            System.out.println("Invalid API key");
+            return;
+        }
+
         // update subscription
         SubscriptionData sData = new SubscriptionData();
         sData.setCreatorId(creatorId);
@@ -120,9 +140,8 @@ public class SubscriptionController implements SubscriptionInterface {
 
         // request logging
         LoggingData lData = new LoggingData();
-        MessageContext mc = webService.getMessageContext();
         HttpExchange req = (HttpExchange) mc.get(JAXWSProperties.HTTP_EXCHANGE);
-        lData.setDescription("Subscription updated in " + subscriberId + " to " + status);
+        lData.setDescription("Subscription updated request from " + apikey + " in " + subscriberId + " to " + status);
         lData.setIp((req.getRemoteAddress()).toString());
         lData.setEndpoint("/subscription");
         lData.setRequestedAt(new Timestamp(System.currentTimeMillis()));
@@ -148,10 +167,19 @@ public class SubscriptionController implements SubscriptionInterface {
 
     @WebMethod
     public List<SubscriptionData> getListSubcription() {
-        LoggingData lData = new LoggingData();
         MessageContext mc = webService.getMessageContext();
+
+        // check api key
+        ValidateAPIKey validateApiKey = new ValidateAPIKey();
+        String apikey = validateApiKey.validateApiKey(mc);
+        if (apikey.equals("INVALID")) {
+            System.out.println("Invalid API key");
+            return null;
+        }
+
+        LoggingData lData = new LoggingData();
         HttpExchange req = (HttpExchange) mc.get(JAXWSProperties.HTTP_EXCHANGE);
-        lData.setDescription("Get list subscription");
+        lData.setDescription("Get list subscription request from " + apikey);
         lData.setIp(req.getRemoteAddress().toString());
         lData.setEndpoint("/subscription");
         lData.setRequestedAt(new Timestamp(System.currentTimeMillis()));
@@ -162,14 +190,23 @@ public class SubscriptionController implements SubscriptionInterface {
 
     @WebMethod
     public boolean getStatus(Integer creatorId, Integer subscriberId) {
+        MessageContext mc = webService.getMessageContext();
+
+        // check api key
+        ValidateAPIKey validateApiKey = new ValidateAPIKey();
+        String apikey = validateApiKey.validateApiKey(mc);
+        if (apikey.equals("INVALID")) {
+            System.out.println("Invalid API key");
+            return false;
+        }
+
         SubscriptionData sData = new SubscriptionData();
         sData.setCreatorId(creatorId);
         sData.setSubscriberId(subscriberId);
 
         LoggingData lData = new LoggingData();
-        MessageContext mc = webService.getMessageContext();
         HttpExchange req = (HttpExchange) mc.get(JAXWSProperties.HTTP_EXCHANGE);
-        lData.setDescription("Get status from creatorId " + creatorId + " and subscriberId " + subscriberId);
+        lData.setDescription("Get status request from " + apikey + " from creatorId " + creatorId + " and subscriberId " + subscriberId);
         lData.setIp(req.getRemoteAddress().toString());
         lData.setEndpoint("/subscription");
         lData.setRequestedAt(new Timestamp(System.currentTimeMillis()));
