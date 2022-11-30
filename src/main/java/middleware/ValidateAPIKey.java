@@ -15,6 +15,7 @@ public class ValidateAPIKey {
     public String validateApiKey(MessageContext mc) {
         HttpExchange req = (HttpExchange) mc.get("com.sun.xml.ws.http.exchange");
         String apikey = req.getRequestHeaders().getFirst("authorization");
+        
         if (apikey == null) {
             return "INVALID";
         }
