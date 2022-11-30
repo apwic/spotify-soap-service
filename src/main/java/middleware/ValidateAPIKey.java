@@ -5,6 +5,7 @@ import jakarta.jws.WebMethod;
 import jakarta.xml.ws.WebServiceContext;
 import jakarta.xml.ws.handler.MessageContext;
 import com.sun.net.httpserver.HttpExchange;
+import io.github.cdimascio.dotenv.Dotenv;
 
 public class ValidateAPIKey {
     @Resource
@@ -17,9 +18,11 @@ public class ValidateAPIKey {
         if (apikey == null) {
             return "INVALID";
         }
-        String appapikey = System.getenv("APIKEY_SEPOTIPAYI_APP");
-        String restapikey = System.getenv("APIKEY_SEPOTIPAYI_REST");
-
+        
+        Dotenv dotenv = Dotenv.load();
+        String appapikey = dotenv.get("APIKEY_SEPOTIPAYI_APP");
+        String restapikey = dotenv.get("APIKEY_SEPOTIPAYI_REST");
+        
         if (apikey.equals(restapikey)) {
             return "REST";
         } else if (apikey.equals(appapikey)) {
