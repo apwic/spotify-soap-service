@@ -9,7 +9,8 @@ import config.DbConfig;
 public class Logging {
     public void addLog(LoggingData lData) {
         String sql = "INSERT logging (description, ip, endpoint, requested_at) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DbConfig.connect();
+        try (
+            Connection conn = DbConfig.connect();
             PreparedStatement query = conn.prepareStatement(sql)) {
             query.setString(1, lData.getDescription());
             query.setString(2, lData.getIp());
