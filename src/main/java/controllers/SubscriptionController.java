@@ -26,19 +26,19 @@ public class SubscriptionController implements SubscriptionInterface {
 
     @WebMethod
     public void addSubscription(SubscriptionData sData) {
-      MessageContext mc = webService.getMessageContext();
-      HttpExchange req = (HttpExchange) mc.get(JAXWSProperties.HTTP_EXCHANGE);
-      subscription.addSubscription(sData);
-    
-      LoggingData lData = new LoggingData();
-      lData.setDescription("Subscription with creatorId " + sData.getCreatorId() + " and subscriberId " + sData.getSubscriberId() + " added");
-      lData.setIp((req.getRemoteAddress()).toString());
-      lData.setEndpoint("/subscription");
-      lData.setRequestedAt(new Timestamp(System.currentTimeMillis()));
-      logging.addLog(lData);
+        subscription.addSubscription(sData);
+        
+        LoggingData lData = new LoggingData();
+        MessageContext mc = webService.getMessageContext();
+        HttpExchange req = (HttpExchange) mc.get(JAXWSProperties.HTTP_EXCHANGE);
+        lData.setDescription("Subscription with creatorId " + sData.getCreatorId() + " and subscriberId " + sData.getSubscriberId() + " added");
+        lData.setIp((req.getRemoteAddress()).toString());
+        lData.setEndpoint("/subscription");
+        lData.setRequestedAt(new Timestamp(System.currentTimeMillis()));
+        logging.addLog(lData);
     }
     
-    @Override
+    @WebMethod
     public void updateStatus(Integer creatorId, Integer subscriberId, String status) {
         SubscriptionData sData = new SubscriptionData();
         sData.setCreatorId(creatorId);
@@ -47,18 +47,22 @@ public class SubscriptionController implements SubscriptionInterface {
         subscription.updateStatus(sData);
 
         LoggingData lData = new LoggingData();
+        MessageContext mc = webService.getMessageContext();
+        HttpExchange req = (HttpExchange) mc.get(JAXWSProperties.HTTP_EXCHANGE);
         lData.setDescription("Subscription updated in " + subscriberId + " to " + status);
-        lData.setIp("0.0.0.0");
+        lData.setIp((req.getRemoteAddress()).toString());
         lData.setEndpoint("/subscription");
         lData.setRequestedAt(new Timestamp(System.currentTimeMillis()));
         logging.addLog(lData);
     }
 
-    @Override
+    @WebMethod
     public List<SubscriptionData> getListSubcription() {
         LoggingData lData = new LoggingData();
+        MessageContext mc = webService.getMessageContext();
+        HttpExchange req = (HttpExchange) mc.get(JAXWSProperties.HTTP_EXCHANGE);
         lData.setDescription("Get list subscription");
-        lData.setIp("0.0.0.0");
+        lData.setIp(req.getRemoteAddress().toString());
         lData.setEndpoint("/subscription");
         lData.setRequestedAt(new Timestamp(System.currentTimeMillis()));
         logging.addLog(lData);
@@ -66,15 +70,17 @@ public class SubscriptionController implements SubscriptionInterface {
         return subscription.getListSubscription();
     }
 
-    @Override
+    @WebMethod
     public boolean getStatus(Integer creatorId, Integer subscriberId) {
         SubscriptionData sData = new SubscriptionData();
         sData.setCreatorId(creatorId);
         sData.setSubscriberId(subscriberId);
 
         LoggingData lData = new LoggingData();
+        MessageContext mc = webService.getMessageContext();
+        HttpExchange req = (HttpExchange) mc.get(JAXWSProperties.HTTP_EXCHANGE);
         lData.setDescription("Get status from creatorId " + creatorId + " and subscriberId " + subscriberId);
-        lData.setIp("0.0.0.0");
+        lData.setIp(req.getRemoteAddress().toString());
         lData.setEndpoint("/subscription");
         lData.setRequestedAt(new Timestamp(System.currentTimeMillis()));
         logging.addLog(lData);
