@@ -20,4 +20,7 @@ public interface SubscriptionInterface {
 
     @WebMethod
     boolean getStatus(@WebParam Integer creatorId, Integer subscriberId);
+
+    @WebMethod
+    List<SubscriptionData> getSubscriptionBySubsId(@WebParam Integer subscriberId);
 }

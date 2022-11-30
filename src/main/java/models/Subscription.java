@@ -79,4 +79,26 @@ public class Subscription {
         }
     }
 
+    public List<SubscriptionData> getSubscriptionBySubsId (Integer subscriberId) {
+      String sql = "SELECT * FROM subscription WHERE subscriber_id = ?";
+      try (Connection conn = DbConfig.connect(); PreparedStatement query = conn.prepareStatement(sql)) {
+        query.setInt(1, subscriberId);
+        ResultSet res = query.executeQuery();
+
+        List<SubscriptionData> listSubs = new ArrayList<>();
+        while (res.next()) {
+            SubscriptionData sData = new SubscriptionData();
+            sData.setCreatorId(res.getInt("creator_id"));
+            sData.setSubscriberId(res.getInt("subscriber_id"));
+            sData.setCreatorName(res.getString("creator_name"));
+            sData.setSubscriberName(res.getString("subscriber_name"));
+            sData.setStatus(res.getString("status"));
+            listSubs.add(sData);
+        }
+        return listSubs;
+      } catch (SQLException e) {
+        throw new RuntimeException("ERROR: unable to get subscription data", e);
+      }
+    }
+
 }

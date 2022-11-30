@@ -91,7 +91,7 @@ public class SubscriptionController implements SubscriptionInterface {
 
         // sync addition with sepotipayi app
         try {
-            URL appUrl = new URL("http://localhost:8008/api/subs/addsubs.php");
+            URL appUrl = new URL("http://localhost:80/api/subs/addsubs.php");
             HttpURLConnection conn = (HttpURLConnection)appUrl.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
@@ -130,7 +130,7 @@ public class SubscriptionController implements SubscriptionInterface {
 
         // sync updates with sepotipayi app
         try {
-            URL appUrl = new URL("http://localhost:8008/api/subs/updatesubs.php");
+            URL appUrl = new URL("http://localhost:80/api/subs/updatesubs.php");
             HttpURLConnection conn = (HttpURLConnection)appUrl.openConnection();
             conn.setRequestMethod("PUT");
             conn.setDoOutput(true);
@@ -176,5 +176,19 @@ public class SubscriptionController implements SubscriptionInterface {
         logging.addLog(lData);
 
         return (subscription.getStatus(sData)).equals("ACCEPTED");
+    }
+
+    @WebMethod
+    public List<SubscriptionData> getSubscriptionBySubsId (Integer subscriberId) {
+      LoggingData lData = new LoggingData();
+      MessageContext mc = webService.getMessageContext();
+      HttpExchange req = (HttpExchange) mc.get(JAXWSProperties.HTTP_EXCHANGE);
+      lData.setDescription("Get subscription by subscriberId " + subscriberId);
+      lData.setIp(req.getRemoteAddress().toString());
+      lData.setEndpoint("/subscription");
+      lData.setRequestedAt(new Timestamp(System.currentTimeMillis()));
+      logging.addLog(lData);
+
+      return subscription.getSubscriptionBySubsId(subscriberId);
     }
 }
