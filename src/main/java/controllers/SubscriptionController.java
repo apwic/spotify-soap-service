@@ -3,7 +3,14 @@ package controllers;
 import java.sql.Timestamp;
 import java.util.List;
 
+import com.sun.xml.ws.developer.JAXWSProperties;
+
+import jakarta.annotation.Resource;
+import jakarta.jws.WebMethod;
 import jakarta.jws.WebService;
+import jakarta.xml.ws.WebServiceContext;
+import jakarta.xml.ws.handler.MessageContext;
+import com.sun.net.httpserver.HttpExchange;
 import models.Subscription;
 import models.SubscriptionData;
 import models.Logging;
@@ -11,16 +18,21 @@ import models.LoggingData;
 
 @WebService(endpointInterface = "controllers.SubscriptionInterface")
 public class SubscriptionController implements SubscriptionInterface {
+    @Resource
+    private WebServiceContext webService;
+
     private Subscription subscription = new Subscription();
     private Logging logging = new Logging();
 
-    @Override
+    @WebMethod
     public void addSubscription(SubscriptionData sData) {
+      MessageContext mc = webService.getMessageContext();
+      HttpExchange req = (HttpExchange) mc.get(JAXWSProperties.HTTP_EXCHANGE);
       subscription.addSubscription(sData);
-
+    
       LoggingData lData = new LoggingData();
       lData.setDescription("Subscription with creatorId " + sData.getCreatorId() + " and subscriberId " + sData.getSubscriberId() + " added");
-      lData.setIp("0.0.0.0");
+      lData.setIp((req.getRemoteAddress()).toString());
       lData.setEndpoint("/subscription");
       lData.setRequestedAt(new Timestamp(System.currentTimeMillis()));
       logging.addLog(lData);
