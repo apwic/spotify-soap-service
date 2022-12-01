@@ -189,7 +189,7 @@ public class SubscriptionController implements SubscriptionInterface {
     }
 
     @WebMethod
-    public boolean getStatus(Integer creatorId, Integer subscriberId) {
+    public boolean checkStatus(Integer creatorId, Integer subscriberId) {
         MessageContext mc = webService.getMessageContext();
 
         // check api key
@@ -212,20 +212,29 @@ public class SubscriptionController implements SubscriptionInterface {
         lData.setRequestedAt(new Timestamp(System.currentTimeMillis()));
         logging.addLog(lData);
 
-        return (subscription.getStatus(sData)).equals("ACCEPTED");
+        return (subscription.checkStatus(sData)).equals("ACCEPTED");
     }
 
     @WebMethod
     public List<SubscriptionData> getSubscriptionBySubsId (Integer subscriberId) {
-      LoggingData lData = new LoggingData();
-      MessageContext mc = webService.getMessageContext();
-      HttpExchange req = (HttpExchange) mc.get(JAXWSProperties.HTTP_EXCHANGE);
-      lData.setDescription("Get subscription by subscriberId " + subscriberId);
-      lData.setIp(req.getRemoteAddress().toString());
-      lData.setEndpoint("/subscription");
-      lData.setRequestedAt(new Timestamp(System.currentTimeMillis()));
-      logging.addLog(lData);
+        MessageContext mc = webService.getMessageContext();
+        
+        // check api key
+        ValidateAPIKey validateApiKey = new ValidateAPIKey();
+        String apikey = validateApiKey.validateApiKey(mc);
+        if (apikey.equals("INVALID")) {
+            System.out.println("Invalid API key");
+            return null;
+        }
 
-      return subscription.getSubscriptionBySubsId(subscriberId);
+        LoggingData lData = new LoggingData();
+        HttpExchange req = (HttpExchange) mc.get(JAXWSProperties.HTTP_EXCHANGE);
+        lData.setDescription("Get subscription by subscriberId " + subscriberId);
+        lData.setIp(req.getRemoteAddress().toString());
+        lData.setEndpoint("/subscription");
+        lData.setRequestedAt(new Timestamp(System.currentTimeMillis()));
+        logging.addLog(lData);
+
+        return subscription.getSubscriptionBySubsId(subscriberId);
     }
 }

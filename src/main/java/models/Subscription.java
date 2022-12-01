@@ -61,7 +61,7 @@ public class Subscription {
         }
     }
 
-    public String getStatus (SubscriptionData sData) {
+    public String checkStatus (SubscriptionData sData) {
         String sql = "SELECT status FROM subscription WHERE creator_id = ? AND subscriber_id = ?";
         try (Connection conn = DbConfig.connect();
             PreparedStatement query = conn.prepareStatement(sql)) {
