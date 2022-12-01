@@ -13,7 +13,7 @@ services:
     ports:
       - 3316:3306
     volumes:
-      - ./sepotipayi.sql:/docker-entrypoint-initdb.d/sepotipayi.sql:ro
+      - ./sepotipayi_soap.sql:/docker-entrypoint-initdb.d/sepotipayi_soap.sql:ro
 volumes:
   db:
     driver: local
