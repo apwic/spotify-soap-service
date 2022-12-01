@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+  soap:
+    build: .
+    container_name: sepotipayi-soap-service
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - 7070:7070
+  mysql:
+    container_name: sepotipayi-soap-db
+    image: mysql:latest
+    ports:
+      - 3316:3306
+    volumes:
+      - ./sepotipayi.sql:/docker-entrypoint-initdb.d/sepotipayi.sql:ro
+volumes:
+  db:
+    driver: local
