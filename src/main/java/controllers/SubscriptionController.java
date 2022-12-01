@@ -34,6 +34,7 @@ public class SubscriptionController implements SubscriptionInterface {
 
     private Subscription subscription = new Subscription();
     private Logging logging = new Logging();
+    private String AppURL = "http://host.docker.internal:8008/api";
 
     // post/put request to PHP
     private void postRequest(HttpURLConnection conn, Map<String, String> formData) {
@@ -98,25 +99,6 @@ public class SubscriptionController implements SubscriptionInterface {
         lData.setEndpoint("/subscription");
         lData.setRequestedAt(new Timestamp(System.currentTimeMillis()));
         logging.addLog(lData);
-
-        // sync addition with sepotipayi app
-        try {
-            URL appUrl = new URL("http://localhost:80/api/subs/addsubs.php");
-            HttpURLConnection conn = (HttpURLConnection)appUrl.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-            Map<String, String> formData = new HashMap<String, String>();
-            formData.put("creator_id", sData.getCreatorId().toString());
-            formData.put("subscriber_id", sData.getSubscriberId().toString());
-            formData.put("creator_name", sData.getCreatorName());
-            formData.put("subscriber_name", sData.getSubscriberName());
-            formData.put("status", sData.getStatus());
-            postRequest(conn, formData);
-            handleResponse(conn);
-            conn.disconnect();
-        } catch (Exception e) {
-            System.out.println("Unable to sync subscription (add)");
-        }
     }
     
     @WebMethod
@@ -149,7 +131,7 @@ public class SubscriptionController implements SubscriptionInterface {
 
         // sync updates with sepotipayi app
         try {
-            URL appUrl = new URL("http://localhost:80/api/subs/updatesubs.php");
+            URL appUrl = new URL(AppURL + "/subs/updatesubs.php");
             HttpURLConnection conn = (HttpURLConnection)appUrl.openConnection();
             conn.setRequestMethod("PUT");
             conn.setDoOutput(true);

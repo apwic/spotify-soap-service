@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.5deb2
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Dec 01, 2022 at 05:05 PM
--- Server version: 8.0.31-0ubuntu0.20.04.1
--- PHP Version: 8.0.25
+-- Host: database
+-- Generation Time: Dec 01, 2022 at 09:34 PM
+-- Server version: 8.0.31
+-- PHP Version: 8.0.26
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -21,7 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `sepotipayi_soap`
 --
-CREATE DATABASE IF NOT EXISTS `sepotipayi_soap` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+CREATE DATABASE IF NOT EXISTS `sepotipayi_soap` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `sepotipayi_soap`;
 
 -- --------------------------------------------------------
@@ -30,12 +29,13 @@ USE `sepotipayi_soap`;
 -- Table structure for table `logging`
 --
 
+DROP TABLE IF EXISTS `logging`;
 CREATE TABLE `logging` (
   `id` int NOT NULL,
   `description` char(255) NOT NULL,
-  `ip` char(16) NOT NULL,
+  `ip` char(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `endpoint` char(255) NOT NULL,
-  `requested_at` timestamp NOT NULL
+  `requested_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -44,6 +44,7 @@ CREATE TABLE `logging` (
 -- Table structure for table `subscription`
 --
 
+DROP TABLE IF EXISTS `subscription`;
 CREATE TABLE `subscription` (
   `creator_id` int NOT NULL,
   `subscriber_id` int NOT NULL,
@@ -51,6 +52,13 @@ CREATE TABLE `subscription` (
   `subscriber_name` char(255) NOT NULL,
   `status` char(255) NOT NULL DEFAULT 'PENDING'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `subscription`
+--
+
+INSERT INTO `subscription` (`creator_id`, `subscriber_id`, `creator_name`, `subscriber_name`, `status`) VALUES
+(1, 2, 'user', 'user', 'ACCEPTED');
 
 --
 -- Indexes for dumped tables
@@ -76,7 +84,7 @@ ALTER TABLE `subscription`
 -- AUTO_INCREMENT for table `logging`
 --
 ALTER TABLE `logging`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

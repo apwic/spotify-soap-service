@@ -7,8 +7,8 @@ import java.sql.SQLException;
 public class DbConfig {
     public static Connection connect() {
         String user = "root";
-        String password = "";
-        String url = "jdbc:mysql://localhost:3306/sepotipayi_soap";
+        String password = "root";
+        String url = "jdbc:mysql://database/sepotipayi_soap";
 
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");

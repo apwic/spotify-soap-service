@@ -80,7 +80,7 @@ public class Subscription {
     }
 
     public List<SubscriptionData> getSubscriptionBySubsId (Integer subscriberId) {
-      String sql = "SELECT * FROM subscription WHERE subscriber_id = ? AND STATUS='APPROVE'";
+      String sql = "SELECT * FROM subscription WHERE subscriber_id = ? AND STATUS='ACCEPTED'";
       try (Connection conn = DbConfig.connect(); PreparedStatement query = conn.prepareStatement(sql)) {
         query.setInt(1, subscriberId);
         ResultSet res = query.executeQuery();

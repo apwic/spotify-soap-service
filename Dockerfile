@@ -1,6 +1,6 @@
 FROM maven:3.6.0 as build
 
-WORKDIR /.
+WORKDIR /soap
 
 COPY . .
 
@@ -10,8 +10,9 @@ FROM openjdk:11
 
 WORKDIR /target
 
-COPY --from=build /./target .
-
-EXPOSE 7070
+COPY .env .
+COPY --from=build /soap/target .
 
 CMD java -jar sepotipayi-soap.jar
+
+EXPOSE 7070
