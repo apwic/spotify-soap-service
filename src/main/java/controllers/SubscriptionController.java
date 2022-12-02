@@ -171,7 +171,7 @@ public class SubscriptionController implements SubscriptionInterface {
     }
 
     @WebMethod
-    public boolean checkStatus(Integer creatorId, Integer subscriberId) {
+    public String checkStatus(Integer creatorId, Integer subscriberId) {
         MessageContext mc = webService.getMessageContext();
 
         // check api key
@@ -179,7 +179,7 @@ public class SubscriptionController implements SubscriptionInterface {
         String apikey = validateApiKey.validateApiKey(mc);
         if (apikey.equals("INVALID")) {
             System.out.println("Invalid API key");
-            return false;
+            return "";
         }
 
         SubscriptionData sData = new SubscriptionData();
@@ -194,7 +194,7 @@ public class SubscriptionController implements SubscriptionInterface {
         lData.setRequestedAt(new Timestamp(System.currentTimeMillis()));
         logging.addLog(lData);
 
-        return (subscription.checkStatus(sData)).equals("ACCEPTED");
+        return (subscription.checkStatus(sData));
     }
 
     @WebMethod

@@ -19,7 +19,7 @@ public interface SubscriptionInterface {
     List<SubscriptionData> getListSubcription();
 
     @WebMethod
-    boolean checkStatus(@WebParam Integer creatorId, Integer subscriberId);
+    String checkStatus(@WebParam Integer creatorId, Integer subscriberId);
 
     @WebMethod
     List<SubscriptionData> getSubscriptionBySubsId(@WebParam Integer subscriberId);
