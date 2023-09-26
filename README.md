@@ -11,7 +11,7 @@ SOAP Service merupakan Server yang digunakan untuk client Sepotipayi App dan Sep
 5. Sync with Sepotipayi App Database
 
 ## Cara Menjalankan Server
-> Perlu diperhatikan bahwa terdapat repository `sepotipayi-docker` untuk mempermudah menjalankan aplikasi secara sekaligus dan **disarankan** untuk menjalankan server melewati repository tersebut.
+> Perlu diperhatikan bahwa terdapat repository https://github.com/apwic/spotify-docker-script untuk mempermudah menjalankan aplikasi secara sekaligus dan **disarankan** untuk menjalankan server melewati repository tersebut.
 
 1. Pastikan docker desktop sudah dijalankan, disarankan untuk melakukan delete terlebih dahulu pada image MySQL yang sudah dimiliki sebelumnya
 2. Jalankan perintah `docker-compose up --build`
